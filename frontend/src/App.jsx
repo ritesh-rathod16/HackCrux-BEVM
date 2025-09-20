@@ -18,9 +18,14 @@ function App() {
   const [availableAccounts, setAvailableAccounts] = useState([]);
   const [showAccountSelector, setShowAccountSelector] = useState(false);
   const [showAddAccountHelp, setShowAddAccountHelp] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true); // New state for welcome animation
 
   useEffect(() => { 
-    checkWalletConnected();
+    // Show welcome animation for 3 seconds
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+      checkWalletConnected();
+    }, 3000);
     
     // Listen for account changes
     if (window.ethereum) {
@@ -28,6 +33,7 @@ function App() {
     }
     
     return () => {
+      clearTimeout(timer);
       if (window.ethereum) {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
       }
@@ -112,7 +118,7 @@ function App() {
 
   async function connectWallet() {
     if (!window.ethereum) {
-      alert("Please install MetaMask to use this dApp!");
+      alert("Please install a Web3 wallet to use this dApp!");
       return;
     }
     
@@ -198,6 +204,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 flex items-center justify-center p-4">
+      {/* Welcome Animation */}
+      {showWelcome && (
+        <div className="fixed inset-0 bg-gray-900 flex flex-col items-center justify-center z-50">
+          <div className="animate-pulse">
+            {/* AVS Logo - Replace with your actual logo */}
+            <div className="w-32 h-32 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8">
+              <span className="text-white text-2xl font-bold">AVS</span>
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-white mt-8 animate-bounce">Welcome to Shardeum Voting</h2>
+        </div>
+      )}
+      
       <div className="bg-gray-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-700">
         {/* Header */}
         <div className="bg-gradient-to-r from-indigo-800 to-purple-800 p-6 flex items-center justify-between">
@@ -208,8 +227,8 @@ function App() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Blockchain Poll</h1>
-              <p className="text-indigo-200 text-sm">Secure voting on the Ethereum network</p>
+              <h1 className="text-2xl font-bold text-white">Shardeum Polling System</h1>
+              <p className="text-indigo-200 text-sm">Secure voting on the Shardeum network</p>
             </div>
           </div>
           {walletConnected && (
@@ -263,7 +282,7 @@ function App() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Add a new account in MetaMask
+                    Add a new account in your wallet
                   </button>
                 </div>
               </div>
@@ -293,12 +312,12 @@ function App() {
           <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
             <div className="bg-gray-800 rounded-xl w-full max-w-md border border-gray-700">
               <div className="p-6 border-b border-gray-700">
-                <h2 className="text-xl font-semibold">Add Account in MetaMask</h2>
+                <h2 className="text-xl font-semibold">Add Account in Wallet</h2>
                 <p className="text-gray-400 text-sm mt-1">Follow these steps to add a new account</p>
               </div>
               <div className="p-6">
                 <ol className="list-decimal pl-5 space-y-3">
-                  <li>Open your MetaMask extension</li>
+                  <li>Open your Web3 wallet extension</li>
                   <li>Click on the account switcher (top center)</li>
                   <li>Click on "Add account or hardware wallet"</li>
                   <li>Follow the prompts to create a new account</li>
@@ -456,7 +475,7 @@ function App() {
         
         {/* Footer */}
         <div className="bg-gray-900 bg-opacity-50 p-4 text-center text-xs text-gray-500">
-          Powered by Ethereum · Votes are final and cannot be changed
+          Powered by Shardeum · Votes are final and cannot be changed
         </div>
       </div>
     </div>
